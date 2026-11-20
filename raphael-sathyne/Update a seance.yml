@@ -1,0 +1,23 @@
+info:
+  name: Update a seance
+  type: http
+
+http:
+  method: PUT
+  url: http://localhost:8084/seances/1
+  body:
+    type: json
+    data: |-
+      {
+        "salle": "Salle IMAX",
+        "horaire": "2026-11-25T22:30:00",
+        "nombrePlaces": 200,
+        "filmId": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

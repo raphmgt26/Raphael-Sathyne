@@ -1,0 +1,30 @@
+info:
+  name: Create a Seance
+  type: http
+
+http:
+  method: POST
+  url: http://localhost:8084/seances
+  headers:
+    - name: ""
+      value: ""
+  params:
+    - name: ""
+      value: ""
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "salle": "Salle 1",
+        "horaire": "2026-11-25T20:00:00",
+        "nombrePlaces": 120,
+        "filmId": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
