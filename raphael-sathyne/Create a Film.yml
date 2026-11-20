@@ -1,0 +1,17 @@
+info:
+  name: Create a Film
+  type: http
+
+http:
+  method: POST
+  url: http://localhost:8084/films
+  body:
+    type: json
+    data: '{"titre": "Inception", "realisateur": "Nolan", "genre": "Sci-Fi", "dureeMinutes": 148}'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
