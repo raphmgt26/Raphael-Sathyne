@@ -8,48 +8,57 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.basespringboot.dto.SeanceRequest;
 import com.basespringboot.dto.SeanceResponse;
+import com.basespringboot.entity.FilmEntity;
 import com.basespringboot.entity.SeanceEntity;
 import com.basespringboot.repository.FilmRepository;
 import com.basespringboot.repository.SeanceRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class SeanceServiceImpl implements SeanceService {
 
     private final SeanceRepository repository;
     private final FilmRepository filmRepository;
 
-    public SeanceServiceImpl(SeanceRepository repository, FilmRepository filmRepository) {
-        this.repository = repository;
-        this.filmRepository = filmRepository;
-    }
-
+    @Override
     public List<SeanceResponse> findAll() {
         return repository.findAll().stream().map(this::toResponse).toList();
     }
 
+    @Override
     public SeanceResponse findById(Long id) {
         return toResponse(getOrThrow(id));
     }
 
+    @Override
     public SeanceResponse create(SeanceRequest request) {
-        if (request.getFilmId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "filmId obligatoire");
-        }
         SeanceEntity s = new SeanceEntity();
-        s.setFilm(filmRepository.findById(request.getFilmId()).orElseThrow(() ->
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "Film introuvable")));
+        s.setFilm(resolveFilm(request.getFilmId()));
         fill(s, request);
         return toResponse(repository.save(s));
     }
 
+    @Override
     public SeanceResponse update(Long id, SeanceRequest request) {
         SeanceEntity s = getOrThrow(id);
+        s.setFilm(resolveFilm(request.getFilmId()));
         fill(s, request);
         return toResponse(repository.save(s));
     }
 
+    @Override
     public void delete(Long id) {
         repository.delete(getOrThrow(id));
+    }
+
+    private FilmEntity resolveFilm(Long filmId) {
+        if (filmId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "filmId obligatoire");
+        }
+        return filmRepository.findById(filmId).orElseThrow(() ->
+            new ResponseStatusException(HttpStatus.NOT_FOUND, "Film introuvable"));
     }
 
     private void fill(SeanceEntity s, SeanceRequest request) {
@@ -64,7 +73,12 @@ public class SeanceServiceImpl implements SeanceService {
     }
 
     private SeanceResponse toResponse(SeanceEntity s) {
-        return new SeanceResponse(s.getId(), s.getSalle(), s.getHoraire(),
-            s.getNombrePlaces(), s.getFilm().getId());
+        return new SeanceResponse(
+            s.getId(),
+            s.getSalle(),
+            s.getHoraire(),
+            s.getNombrePlaces(),
+            s.getFilm().getId()
+        );
     }
 }

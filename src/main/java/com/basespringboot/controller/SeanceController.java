@@ -18,16 +18,14 @@ import com.basespringboot.dto.SeanceResponse;
 import com.basespringboot.service.SeanceService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/seances")
+@RequiredArgsConstructor
 public class SeanceController {
 
     private final SeanceService service;
-
-    public SeanceController(SeanceService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public List<SeanceResponse> getAll() {
