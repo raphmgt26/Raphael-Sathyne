@@ -1,13 +1,20 @@
 info:
   name: Create a Film
   type: http
+  seq: 1
 
 http:
   method: POST
   url: http://localhost:8084/films
   body:
     type: json
-    data: '{"titre": "Inception", "realisateur": "Nolan", "genre": "Sci-Fi", "dureeMinutes": 148}'
+    data: |-
+      {
+        "titre": "Inception",
+        "realisateur": "Nolan",
+        "genre": "Sci-Fi",
+        "dureeMinutes": 148
+      }
   auth: inherit
 
 settings:
